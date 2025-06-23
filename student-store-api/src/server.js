@@ -7,7 +7,7 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 const morgan = require("morgan");
 const studentStoreRoutes = require("./routes/studentStoreRoutes");
-
+// /Users/amari.may/codepath/UNIT-4/site-week4-student-store-starter/student-store-api/routes/studentStoreRoutes.js
 
 
 
@@ -15,13 +15,15 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 
+app.use("/products", studentStoreRoutes);
+
 const PORT = process.env.PORT; //port from .env file
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
 
-app.use("/products", pokemonRoutes);
+
 
 
 
