@@ -2,12 +2,13 @@ require("dotenv").config(); // lets us use .env variables in our code
 
 const express = require("express");
 const app = express();
-const ProductModel = require('./models/product')
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 const morgan = require("morgan");
 const studentStoreRoutes = require("./routes/studentStoreRoutes");
 // /Users/amari.may/codepath/UNIT-4/site-week4-student-store-starter/student-store-api/routes/studentStoreRoutes.js
+
+const orderRoutes = require("./routes/orderRoutes");
 
 
 
@@ -16,6 +17,7 @@ app.use(morgan("dev"));
 
 
 app.use("/products", studentStoreRoutes);
+app.use("/orders", orderRoutes )
 
 const PORT = process.env.PORT; //port from .env file
 

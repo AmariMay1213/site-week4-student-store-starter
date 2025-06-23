@@ -1,7 +1,5 @@
 const prisma = require("../models/product");
 
-//add list by id
-
 exports.getAll = async (req, res) => {
   const { category, name, sort } = req.query;
   const filters = {};
