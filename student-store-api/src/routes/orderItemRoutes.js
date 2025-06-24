@@ -1,6 +1,6 @@
 const express = require("express")
 const router = express.Router();
-const controller = require("../controllers/orderController")
+const controller = require("../controllers/orderItemController")
 
 
 
@@ -9,8 +9,6 @@ const controller = require("../controllers/orderController")
 
 router.get("/", controller.getAll);
 router.get("/:id", controller.getByID);
-router.get("/:id/full", controller.getOrderWithItems); 
-//displau customer # and then show what they ordered and each orders product details
 router.post("/", controller.create);
 router.put("/:id", controller.update);
 router.delete("/:id", controller.remove);

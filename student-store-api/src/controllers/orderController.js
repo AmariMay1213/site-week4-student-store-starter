@@ -42,6 +42,35 @@ exports.getByID = async (req, res) => {
   res.json(order);
 };
 
+exports.getOrderWithItems = async (req, res) => {
+  const id = Number(req.params.id);
+
+  try {
+    const order = await prisma.order.findUnique({
+      where: { id },
+      include: {
+        //include all the orderItems for this order 
+        orderItems: {
+          include: {
+            product: true
+            // include product info for each item 
+          }
+        }
+      }
+    });
+
+    if (!order) {
+      return res.status(404).json({ error: "Order not found!" });
+    }
+
+    res.json(order);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Something went wrong." });
+  }
+};
+
+
 exports.create = async (req, res) => {
   const { customer, total, status } = req.body;
   if (!customer|| !total|| !status ) {
@@ -49,7 +78,7 @@ exports.create = async (req, res) => {
   }
 
   if (typeof total !== "number") {
-    throw new Error("price must be a number");
+    throw new Error("total must be a number");
   }
 
   const newOrder = await prisma.order.create({
@@ -67,7 +96,7 @@ exports.update = async (req, res) => {
   }
 
   if (typeof total !== "number") {
-    throw new Error("price must be a number");
+    throw new Error("total must be a number");
   }
 
 
@@ -89,3 +118,5 @@ exports.remove = async (req, res) => {
   await prisma.order.delete({ where: { id: parseInt(id) } });
   res.status(204).end();
 };
+
+

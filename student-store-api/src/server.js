@@ -9,6 +9,7 @@ const studentStoreRoutes = require("./routes/studentStoreRoutes");
 // /Users/amari.may/codepath/UNIT-4/site-week4-student-store-starter/student-store-api/routes/studentStoreRoutes.js
 
 const orderRoutes = require("./routes/orderRoutes");
+const orderItemRoutes = require("./routes/orderItemRoutes");
 
 
 
@@ -17,7 +18,8 @@ app.use(morgan("dev"));
 
 
 app.use("/products", studentStoreRoutes);
-app.use("/orders", orderRoutes )
+app.use("/orders", orderRoutes ); 
+app.use("/orderItems", orderItemRoutes); 
 
 const PORT = process.env.PORT; //port from .env file
 
