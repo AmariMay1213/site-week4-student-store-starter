@@ -8,11 +8,13 @@ const controller = require("../controllers/orderController")
 
 
 router.get("/", controller.getAll);
-router.get("/:id", controller.getByID);
-router.get("/:id/full", controller.getOrderWithItems); 
+router.get("/:order_id", controller.getByID);
+router.get("/:order_id/full", controller.getOrderWithItems); 
+router.get("/:order_id/total", controller.getOrderTotalPrice); 
 //displau customer # and then show what they ordered and each orders product details
 router.post("/", controller.create);
-router.put("/:id", controller.update);
-router.delete("/:id", controller.remove);
+router.post("/:order_id/items",controller.addItemToOrder);
+router.put("/:order_id", controller.update);
+router.delete("/:order_id", controller.remove);
 
 module.exports = router;

@@ -12,9 +12,9 @@ exports.getAll = async (req, res) => {
 };
 
 exports.getByID = async (req, res) => {
-  const id = Number(req.params.id);
+  const order_item_id = Number(req.params.order_item_id);
 
-  const orderItem = await prisma.orderItem.findUnique({ where: { id } });
+  const orderItem = await prisma.orderItem.findUnique({ where: { order_item_id } });
   if (!orderItem) {
     return res.status(404).json({ error: "Order not found!" });
   }
@@ -22,39 +22,45 @@ exports.getByID = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
-    const { orderId, productId, quantity, price } = req.body;
-  if (!orderId || !productId || !quantity|| !price ) {
-    throw new Error("All fields are required");
-  }
+    const { order_id, product_id, quantity, price } = req.body;
+
+
+  if (
+  order_id === undefined ||
+  product_id === undefined ||
+  quantity === undefined ||
+  price === undefined
+) {
+  return res.status(400).json({ error: "All fields are required" });
+}
+
 
   if (typeof price !== "number") {
-    throw new Error("price must be a number");
+      return res.status(400).json({ error: "Price must be a number" });
   }
 
   const newOrderItem = await prisma.orderItem.create({
-    data: { orderId, productId, quantity, price },
+    data: { order_id, product_id, quantity, price },
   });
 
   res.status(201).json(newOrderItem);
 };
 
 exports.update = async (req, res) => {
-  const id = Number(req.params.id);
-  const { orderId, productId, quantity, price } = req.body;
+  const order_item_id = Number(req.params.order_item_id);
+  const { order_id, product_id, quantity, price } = req.body;
 
-  if (!orderId || !productId || !quantity|| !price ) {
-    throw new Error("All fields are required");
-  }
+
 
   if (typeof price !== "number") {
     throw new Error("price must be a number");
   }
  
   const updateOrderItem = await prisma.orderItem.update({
-    where: { id: parseInt(id) },
+    where: { order_item_id },
     data: {
-     orderId,
-     productId,
+     order_id,
+     product_id,
      quantity,
      price
     },
@@ -64,7 +70,7 @@ exports.update = async (req, res) => {
 };
 
 exports.remove = async (req, res) => {
-  const id = Number(req.params.id);
-  await prisma.orderItem.delete({ where: { id: parseInt(id) } });
+  const order_item_id = Number(req.params.order_item_id);
+  await prisma.orderItem.delete({ where: { order_item_id } });
   res.status(204).end();
 };

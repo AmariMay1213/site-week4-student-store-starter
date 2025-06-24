@@ -8,9 +8,9 @@ const controller = require("../controllers/orderItemController")
 
 
 router.get("/", controller.getAll);
-router.get("/:id", controller.getByID);
+router.get("/:order_item_id", controller.getByID);
 router.post("/", controller.create);
-router.put("/:id", controller.update);
-router.delete("/:id", controller.remove);
+router.put("/:order_item_id", controller.update);
+router.delete("/:order_item_id", controller.remove);
 
 module.exports = router;
