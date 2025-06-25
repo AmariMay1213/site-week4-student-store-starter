@@ -12,30 +12,7 @@ function ProductDetail({ addToCart, removeFromCart, getQuantityOfItemInCart }) {
   const [isFetching, setIsFetching] = useState(false);
   const [error, setError] = useState(null);
 
-
-  if (error) {
-    return <NotFound />;
-  }
-
-  if (isFetching || !product) {
-    return <h1>Loading...</h1>;
-  }
-
-  const quantity = getQuantityOfItemInCart(product);
-
-  const handleAddToCart = () => {
-    if (product.id) {
-      addToCart(product)
-    }
-  };
-
-  const handleRemoveFromCart = () => {
-    if (product.id) {
-      removeFromCart(product);
-    }
-  };
-
-   useEffect(() => {
+ useEffect(() => {
     const fetchProduct = async () =>{
       setIsFetching(true); 
       try{
@@ -53,6 +30,30 @@ function ProductDetail({ addToCart, removeFromCart, getQuantityOfItemInCart }) {
     }
     fetchProduct(); 
   }, [productId])
+  if (error) {
+    return <NotFound />;
+  }
+
+  if (isFetching || !product) {
+    return <h1>Loading...</h1>;
+    //replace loading with a modal function 
+  }
+
+  const quantity = getQuantityOfItemInCart(product);
+
+  const handleAddToCart = () => {
+    if (product.id) {
+      addToCart(product)
+    }
+  };
+
+  const handleRemoveFromCart = () => {
+    if (product.id) {
+      removeFromCart(product);
+    }
+  };
+
+  
 
 
   return (
