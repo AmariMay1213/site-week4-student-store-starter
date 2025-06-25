@@ -42,9 +42,11 @@ function App() {
   useEffect(() => {
     const fetchProducts = async () =>{
       try{
-         const { data } = await axios.get("http://localhost:3000/products/");
+         const { data } = await axios.get(`http://localhost:3000/products/`);
         console.log(data);
         setProducts(data);
+        console.log("Fetched products:", data)
+
 
       }catch(err){
           console.error("Error products: ", err);

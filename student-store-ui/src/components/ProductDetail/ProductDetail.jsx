@@ -35,6 +35,26 @@ function ProductDetail({ addToCart, removeFromCart, getQuantityOfItemInCart }) {
     }
   };
 
+   useEffect(() => {
+    const fetchProduct = async () =>{
+      setIsFetching(true); 
+      try{
+         const { data } = await axios.get(`http://localhost:3000/products/${productId}`);
+        console.log(data);
+        setProduct(data);
+
+      }catch(err){
+          console.error("Error products: ", err);
+
+      }finally{
+        setIsFetching(false); 
+        //finally will run even if the try block fails
+      }
+    }
+    fetchProduct(); 
+  }, [productId])
+
+
   return (
     <div className="ProductDetail">
       <div className="product-card">
