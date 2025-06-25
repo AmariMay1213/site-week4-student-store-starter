@@ -5,6 +5,8 @@ exports.getAll = async (req, res) => {
   const filters = {};
   const orderBy = [];
 
+
+
   if (sort) {
     const [field, direction] = sort.split("_");
 
@@ -20,10 +22,22 @@ exports.getAll = async (req, res) => {
     }
   }
 
+ 
+
+
+
   try {
     const orders = await prisma.order.findMany({
       where: filters,
       orderBy: orderBy.length ? orderBy : undefined,
+      include: {
+        orderItems: {
+          include: {
+            product: true
+    }
+  }
+}
+
     });
     res.json(orders);
   } catch (err) {
@@ -110,6 +124,8 @@ exports.create = async (req, res) => {
 
   res.status(201).json(newOrder);
 };
+
+
 
 exports.addItemToOrder = async (req,res) => {
   //we are adding items to a specific order updates the order and order items models to handle adding items to an order

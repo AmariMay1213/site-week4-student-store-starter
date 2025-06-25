@@ -15,7 +15,7 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState("All Categories");
   const [searchInputValue, setSearchInputValue] = useState("");
-  const [userInfo, setUserInfo] = useState({ name: "", dorm_number: ""});
+  const [userInfo, setUserInfo] = useState({ name: "", email: ""});
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState({});
   const [isFetching, setIsFetching] = useState(false);
@@ -39,15 +39,37 @@ function App() {
 
 const handleOnCheckout = async () => {
   setIsCheckingOut(true); 
+  //basically says we're checking out
   setError(null); 
+  //clear out old error messages before checking out 
+
+  const cartTotal = Object.entries(cart).reduce((total, [productId, quantity]) => {
+  const product = products.find((p) => p.id === Number(productId));
+  //making sure the product exists 
+  const price = product?.price || 0;
+  //after that if the price does not exist for that specific product then default it to zero 
+  return total + price * quantity;
+  //basic arithmetic 
+    }, 0);
+//defaults to zero if all else fails
+    //calculating the total price of all the items in the cart
+    // .reduce() is a function that takes every item in the array and adds them to the total by doing the math with quan
+
 
   const payload = {
-    customer: userInfo.name,
-    email: userInfo.dorm_number,
+    //preparing an object called payload that contains the approrpiate information about the order such as price and status 
+    // and customer id 
+    customer_id: Number(userInfo.name),
+    email: userInfo.email,
+    total_price: cartTotal, 
     status: "completed"
   };
 
+
+
+
   const res = await fetch("http://localhost:3000/orders", {
+    //now we're sending payload to the back end by posting it to the data base of orders
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -56,17 +78,25 @@ const handleOnCheckout = async () => {
   });
   const order = await res.json(); 
   //order is a order object like in prisma schema 
+  //the response that the backend sends back after submitting the order
 
-  const cartItems = Object.entries(cart).map(([productId, quantity]) => ({
+  const cartItems = Object.entries(cart).map(([productId, quantity]) => {
     //object.entries turns the cart that we've called from cart.js into a key value pair rather than an object
     //cart contains a customer_id and a quantity 
     //remember map is like looping through an array and destructuring the array so that it now will like like: product_id: 1 quantity: 4
-  productId: Number(productId),
-  quantity
-}));
+    const product = products.find((p)=> p.id === Number(productId));
+    //grabs all of that products specific info by looping through the products list 
+
+    return{
+  product_id: Number(productId),
+  quantity,
+  price: product?.price || 0
+    }
+});
 
 for(const item of cartItems){
-  await fetch(`http://localhost:3000/orders/${order.id}/items`,{
+  // we are sending each cart item to that specific order
+  await fetch(`http://localhost:3000/orders/${order.order_id}/items`,{
     method: "POST",
     headers: {
         "Content-Type": "application/json"
@@ -74,26 +104,14 @@ for(const item of cartItems){
     body: JSON.stringify(item)
   }); 
 }
-    console.log("Order complete:", order);
-    setCart({});
-    setOrder(order);
+ setCart({});
+ //reset everythign there should be nothing in the cart 
+setUserInfo({ name: "", email: "" });
+setIsCheckingOut(false);
+console.log("Checkout function finished");
+
 
 }
-
-
-
-//  set isCheckingOut to true 
-// create an order with the cart items, make a POST request to
-// http://localhost:3000/orders, handle success and error responses, and
-// reset the cart.
-
-
-      
-
-
-
-  
-
   useEffect(() => {
     const fetchProducts = async () =>{
       try{
